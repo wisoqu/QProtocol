@@ -1,0 +1,8 @@
+# build artifacts
+bin/
+node_modules/
+app/main.js
+app/sea-prep.blob
+app/sea-config.json
+report.sample.json
+*.log

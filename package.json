@@ -1,0 +1,16 @@
+{
+  "name": "qprotocol",
+  "version": "0.1.0",
+  "description": "QProtocol — censorship diagnostics (QPD) and the 'Pirosto' transport lab",
+  "license": "Apache-2.0",
+  "private": true,
+  "scripts": {
+    "build": "./build.sh",
+    "serve": "node app/main.js serve",
+    "diag": "node app/main.js diag",
+    "lab": "node app/main.js lab"
+  },
+  "devDependencies": {
+    "postject": "^1.0.0-alpha.6"
+  }
+}
