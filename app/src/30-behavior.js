@@ -93,11 +93,11 @@ function udpProbe(host, port, payload, timeoutMs) {
 }
 
 /** QUIC Initial (форма пакета как у HTTP/3 клиента) — длинный заголовок, версия 1. */
-function buildQuicInitial() {
+function buildQuicInitial(version) {
   const p = Buffer.alloc(1200);
   crypto.randomFillSync(p);
-  p[0] = 0xc0 | 0x03; // long header, Initial, fixed bit
-  p.writeUInt32BE(0x00000001, 1); // QUIC v1
+  p[0] = 0xc0; // long header (0x80) + fixed bit (0x40) + type Initial (00)
+  p.writeUInt32BE(version != null ? version : 0x00000001, 1); // QUIC v1 по умолчанию
   const dcidLen = 8;
   p[5] = dcidLen;
   // dcid random уже
@@ -111,6 +111,11 @@ function buildQuicInitial() {
 
 async function udpDiagnostics(host) {
   const out = { probes: [], verdicts: [] };
+  // Проба с НЕИЗВЕСТНОЙ версией QUIC: RFC 9000 обязывает сервер ответить
+  // Version Negotiation — это лучший сигнал «UDP-путь жив и кто-то слушает».
+  const quicVn = buildQuicInitial(0x0a0a0a0a);
+  const r0 = await udpProbe(host, 443, quicVn, 3000);
+  out.probes.push({ name: 'quic-version-negotiate:443', ...r0 });
   const quic = buildQuicInitial();
   const r1 = await udpProbe(host, 443, quic, 3000);
   out.probes.push({ name: 'quic-initial:443', ...r1 });

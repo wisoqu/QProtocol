@@ -2,20 +2,20 @@
   "meta": {
     "app": "QPD (QProtocol Diagnostics)",
     "version": "0.1.0",
-    "started_at": "2026-10-28T09:47:01.992Z",
+    "started_at": "2026-10-28T10:19:46.900Z",
     "node": "v22.22.3",
     "platform": "linux 6.1.158+ x64",
     "reference_fingerprint": {
       "note": "JA3/JA4 ClientHello, который QPD отправляет в тестах фрагментации (Chrome-подобный профиль)",
       "ja3": "2b762f211588fb66c75322b9e93f4ce7",
-      "ja4": "t13d1514h2_8daaf6152771_11efbd57248e"
+      "ja4": "t13d1515h2_8daaf6152771_11e33b0c3ef1"
     },
-    "finished_at": "2026-10-28T09:47:39.720Z"
+    "finished_at": "2026-10-28T10:20:25.867Z"
   },
   "environment": {
     "hostname": "e2b.local",
     "cpus": 2,
-    "load": 0.1,
+    "load": 0.08,
     "net_ifaces": "lo, eth0"
   },
   "dns": {
@@ -24,67 +24,67 @@
         "host": "github.com",
         "ok": true,
         "addrs": [
-          "140.82.116.3"
+          "20.29.134.23"
         ],
         "error": null,
-        "ms": 4
+        "ms": 7
       },
       {
         "host": "api.github.com",
         "ok": true,
         "addrs": [
-          "20.29.134.17"
+          "140.82.116.5"
         ],
         "error": null,
-        "ms": 1
+        "ms": 3
       },
       {
         "host": "www.google.com",
         "ok": true,
         "addrs": [
-          "142.251.157.119",
-          "142.251.156.119",
           "142.251.151.119",
+          "142.251.155.119",
+          "142.251.156.119",
+          "142.251.152.119",
           "142.251.150.119",
+          "142.251.157.119",
           "142.251.153.119",
           "142.251.154.119",
-          "142.251.155.119",
-          "142.251.152.119",
-          "2001:4860:4829:7700::",
-          "2001:4860:482b:7700::",
-          "2001:4860:4826:7700::",
           "2001:4860:4827:7700::",
           "2001:4860:482d:7700::",
+          "2001:4860:4826:7700::",
           "2001:4860:4828:7700::",
-          "2001:4860:482a:7700::",
-          "2001:4860:482c:7700::"
+          "2001:4860:482c:7700::",
+          "2001:4860:4829:7700::",
+          "2001:4860:482b:7700::",
+          "2001:4860:482a:7700::"
         ],
         "error": null,
-        "ms": 4
+        "ms": 1
       },
       {
         "host": "www.youtube.com",
         "ok": true,
         "addrs": [
-          "142.251.155.4",
-          "142.251.153.4",
-          "142.251.150.4",
-          "142.251.152.4",
-          "142.251.154.4",
-          "142.251.151.4",
-          "142.251.156.4",
           "142.251.157.4",
-          "2001:4860:4829:400::",
+          "142.251.151.4",
+          "142.251.150.4",
+          "142.251.154.4",
+          "142.251.153.4",
+          "142.251.152.4",
+          "142.251.156.4",
+          "142.251.155.4",
           "2001:4860:482d:400::",
-          "2001:4860:482a:400::",
+          "2001:4860:482b:400::",
+          "2001:4860:4828:400::",
           "2001:4860:4827:400::",
           "2001:4860:482c:400::",
-          "2001:4860:482b:400::",
-          "2001:4860:4826:400::",
-          "2001:4860:4828:400::"
+          "2001:4860:482a:400::",
+          "2001:4860:4829:400::",
+          "2001:4860:4826:400::"
         ],
         "error": null,
-        "ms": 1
+        "ms": 2
       }
     ],
     "raw": [
@@ -98,26 +98,29 @@
           }
         ],
         "poisoned": false,
-        "ms": 3,
-        "resolver": "8.8.8.8",
-        "name": "google-8.8.8.8",
-        "qtype": 1
+        "ms": 15,
+        "resolver_ip": "8.8.8.8",
+        "query_name": "github.com",
+        "qtype": 1,
+        "resolver_name": "google-8.8.8.8"
       },
       {
         "ok": false,
         "error": "timeout",
-        "ms": 3001,
-        "resolver": "1.1.1.1",
-        "name": "cloudflare-1.1.1.1",
-        "qtype": 1
+        "ms": 2999,
+        "resolver_ip": "1.1.1.1",
+        "query_name": "github.com",
+        "qtype": 1,
+        "resolver_name": "cloudflare-1.1.1.1"
       },
       {
         "ok": false,
         "error": "timeout",
-        "ms": 3003,
-        "resolver": "77.88.8.8",
-        "name": "rf-77.88.8.8",
-        "qtype": 1
+        "ms": 3004,
+        "resolver_ip": "77.88.8.8",
+        "query_name": "github.com",
+        "qtype": 1,
+        "resolver_name": "rf-77.88.8.8"
       }
     ],
     "doh": [
@@ -127,7 +130,7 @@
         "ok": false,
         "answers": [],
         "error": "fetch failed",
-        "ms": 39
+        "ms": 35
       }
     ],
     "verdicts": []
@@ -152,15 +155,15 @@
           "cert": {
             "subject": "github.com",
             "issuer": "E2B",
-            "valid_from": "Oct 28 08:22:37 2026 GMT",
-            "valid_to": "Oct 29 09:22:37 2026 GMT",
+            "valid_from": "Oct 28 09:03:22 2026 GMT",
+            "valid_to": "Oct 29 10:03:22 2026 GMT",
             "san": [
               "DNS:github.com"
             ]
           },
           "clienthello": {
             "ja3": "d67b094811e5145139d7cea5f014309f",
-            "ja4": "t13d5212h2_b262b3658495_d2e3c31a3398",
+            "ja4": "t13d5212h2_b262b3658495_8e6e362c5eac",
             "sni": "github.com",
             "ciphers": 52,
             "exts": 12,
@@ -170,7 +173,7 @@
             ]
           },
           "sentBytes": 1605,
-          "ms": 26
+          "ms": 6
         },
         "sni": {
           "real": {
@@ -182,15 +185,15 @@
             "cert": {
               "subject": "github.com",
               "issuer": "E2B",
-              "valid_from": "Oct 28 08:22:37 2026 GMT",
-              "valid_to": "Oct 29 09:22:37 2026 GMT",
+              "valid_from": "Oct 28 09:03:22 2026 GMT",
+              "valid_to": "Oct 29 10:03:22 2026 GMT",
               "san": [
                 "DNS:github.com"
               ]
             },
             "clienthello": {
               "ja3": "d67b094811e5145139d7cea5f014309f",
-              "ja4": "t13d5212h2_b262b3658495_d2e3c31a3398",
+              "ja4": "t13d5212h2_b262b3658495_8e6e362c5eac",
               "sni": "github.com",
               "ciphers": 52,
               "exts": 12,
@@ -208,7 +211,7 @@
             "code": "ECONNRESET",
             "clienthello": {
               "ja3": "d67b094811e5145139d7cea5f014309f",
-              "ja4": "t13d5212h2_b262b3658495_d2e3c31a3398",
+              "ja4": "t13d5212h2_b262b3658495_8e6e362c5eac",
               "sni": "www.microsoft.com",
               "ciphers": 52,
               "exts": 12,
@@ -220,7 +223,7 @@
             "sentBytes": 1612,
             "ms": 3
           },
-          "verdict": "sni-mismatch",
+          "verdict": "mismatch",
           "note": "Родной SNI (github.com) проходит, cover-SNI (www.microsoft.com) — нет. Это может быть как SNI-фильтрацией на пути, так и виртуальным хостингом сервера (чужой SNI отвергает сам сервер). Тест информативен, когда cover-SNI принадлежит той же CDN/инфраструктуре."
         },
         "frag": [
@@ -228,22 +231,13 @@
             "mode": "naive",
             "ok": true,
             "note": "server-hello",
-            "ms": 4,
-            "respBytes": 938,
+            "ms": 12,
+            "respBytes": 937,
             "sentBytes": 540,
             "writes": 1
           },
           {
             "mode": "split1",
-            "ok": true,
-            "note": "server-hello",
-            "ms": 35,
-            "respBytes": 936,
-            "sentBytes": 540,
-            "writes": 2
-          },
-          {
-            "mode": "split-mid-sni",
             "ok": true,
             "note": "server-hello",
             "ms": 34,
@@ -252,10 +246,19 @@
             "writes": 2
           },
           {
+            "mode": "split-mid-sni",
+            "ok": true,
+            "note": "server-hello",
+            "ms": 35,
+            "respBytes": 937,
+            "sentBytes": 540,
+            "writes": 2
+          },
+          {
             "mode": "record-split",
             "ok": false,
             "note": "timeout",
-            "ms": 5033,
+            "ms": 5032,
             "respBytes": 0,
             "sentBytes": 6,
             "writes": 1
@@ -275,11 +278,11 @@
         {
           "level": "ok",
           "code": "tls-ok",
-          "text": "TLS TLSv1.3, TLS_AES_128_GCM_SHA256, ALPN=h2; наш JA3=d67b094811e5145139d7cea5f014309f, JA4=t13d5212h2_b262b3658495_d2e3c31a3398"
+          "text": "TLS TLSv1.3, TLS_AES_128_GCM_SHA256, ALPN=h2; наш JA3=d67b094811e5145139d7cea5f014309f, JA4=t13d5212h2_b262b3658495_8e6e362c5eac"
         },
         {
           "level": "warn",
-          "code": "sni-sni-mismatch",
+          "code": "sni-mismatch",
           "text": "Родной SNI (github.com) проходит, cover-SNI (www.microsoft.com) — нет. Это может быть как SNI-фильтрацией на пути, так и виртуальным хостингом сервера (чужой SNI отвергает сам сервер). Тест информативен, когда cover-SNI принадлежит той же CDN/инфраструктуре."
         },
         {
@@ -308,15 +311,15 @@
           "cert": {
             "subject": "api.github.com",
             "issuer": "E2B",
-            "valid_from": "Oct 28 08:23:29 2026 GMT",
-            "valid_to": "Oct 29 09:23:29 2026 GMT",
+            "valid_from": "Oct 28 09:04:03 2026 GMT",
+            "valid_to": "Oct 29 10:04:03 2026 GMT",
             "san": [
               "DNS:api.github.com"
             ]
           },
           "clienthello": {
             "ja3": "d67b094811e5145139d7cea5f014309f",
-            "ja4": "t13d5212h2_b262b3658495_d2e3c31a3398",
+            "ja4": "t13d5212h2_b262b3658495_8e6e362c5eac",
             "sni": "api.github.com",
             "ciphers": 52,
             "exts": 12,
@@ -326,7 +329,7 @@
             ]
           },
           "sentBytes": 1609,
-          "ms": 6
+          "ms": 13
         },
         "sni": {
           "real": {
@@ -338,15 +341,15 @@
             "cert": {
               "subject": "api.github.com",
               "issuer": "E2B",
-              "valid_from": "Oct 28 08:23:29 2026 GMT",
-              "valid_to": "Oct 29 09:23:29 2026 GMT",
+              "valid_from": "Oct 28 09:04:03 2026 GMT",
+              "valid_to": "Oct 29 10:04:03 2026 GMT",
               "san": [
                 "DNS:api.github.com"
               ]
             },
             "clienthello": {
               "ja3": "d67b094811e5145139d7cea5f014309f",
-              "ja4": "t13d5212h2_b262b3658495_d2e3c31a3398",
+              "ja4": "t13d5212h2_b262b3658495_8e6e362c5eac",
               "sni": "api.github.com",
               "ciphers": 52,
               "exts": 12,
@@ -356,7 +359,7 @@
               ]
             },
             "sentBytes": 1609,
-            "ms": 3
+            "ms": 4
           },
           "cover": {
             "ok": false,
@@ -364,7 +367,7 @@
             "code": "ECONNRESET",
             "clienthello": {
               "ja3": "d67b094811e5145139d7cea5f014309f",
-              "ja4": "t13d5212h2_b262b3658495_d2e3c31a3398",
+              "ja4": "t13d5212h2_b262b3658495_8e6e362c5eac",
               "sni": "www.microsoft.com",
               "ciphers": 52,
               "exts": 12,
@@ -374,9 +377,9 @@
               ]
             },
             "sentBytes": 1612,
-            "ms": 3
+            "ms": 4
           },
-          "verdict": "sni-mismatch",
+          "verdict": "mismatch",
           "note": "Родной SNI (api.github.com) проходит, cover-SNI (www.microsoft.com) — нет. Это может быть как SNI-фильтрацией на пути, так и виртуальным хостингом сервера (чужой SNI отвергает сам сервер). Тест информативен, когда cover-SNI принадлежит той же CDN/инфраструктуре."
         },
         "frag": [
@@ -384,8 +387,8 @@
             "mode": "naive",
             "ok": true,
             "note": "server-hello",
-            "ms": 5,
-            "respBytes": 947,
+            "ms": 3,
+            "respBytes": 945,
             "sentBytes": 540,
             "writes": 1
           },
@@ -393,8 +396,8 @@
             "mode": "split1",
             "ok": true,
             "note": "server-hello",
-            "ms": 33,
-            "respBytes": 947,
+            "ms": 34,
+            "respBytes": 945,
             "sentBytes": 540,
             "writes": 2
           },
@@ -403,7 +406,7 @@
             "ok": true,
             "note": "server-hello",
             "ms": 34,
-            "respBytes": 947,
+            "respBytes": 946,
             "sentBytes": 540,
             "writes": 2
           },
@@ -411,7 +414,7 @@
             "mode": "record-split",
             "ok": false,
             "note": "timeout",
-            "ms": 5033,
+            "ms": 5034,
             "respBytes": 0,
             "sentBytes": 6,
             "writes": 1
@@ -431,11 +434,11 @@
         {
           "level": "ok",
           "code": "tls-ok",
-          "text": "TLS TLSv1.3, TLS_AES_128_GCM_SHA256, ALPN=h2; наш JA3=d67b094811e5145139d7cea5f014309f, JA4=t13d5212h2_b262b3658495_d2e3c31a3398"
+          "text": "TLS TLSv1.3, TLS_AES_128_GCM_SHA256, ALPN=h2; наш JA3=d67b094811e5145139d7cea5f014309f, JA4=t13d5212h2_b262b3658495_8e6e362c5eac"
         },
         {
           "level": "warn",
-          "code": "sni-sni-mismatch",
+          "code": "sni-mismatch",
           "text": "Родной SNI (api.github.com) проходит, cover-SNI (www.microsoft.com) — нет. Это может быть как SNI-фильтрацией на пути, так и виртуальным хостингом сервера (чужой SNI отвергает сам сервер). Тест информативен, когда cover-SNI принадлежит той же CDN/инфраструктуре."
         },
         {
@@ -452,7 +455,7 @@
       "steps": {
         "tcp": {
           "ok": true,
-          "ms": 3,
+          "ms": 2,
           "kind": "ok"
         },
         "tls": {
@@ -461,7 +464,7 @@
           "code": "ECONNRESET",
           "clienthello": {
             "ja3": "d67b094811e5145139d7cea5f014309f",
-            "ja4": "t13d5212h2_b262b3658495_d2e3c31a3398",
+            "ja4": "t13d5212h2_b262b3658495_8e6e362c5eac",
             "sni": "www.google.com",
             "ciphers": 52,
             "exts": 12,
@@ -471,7 +474,7 @@
             ]
           },
           "sentBytes": 1609,
-          "ms": 4
+          "ms": 5
         }
       },
       "verdicts": [
@@ -498,7 +501,7 @@
           "code": "ECONNRESET",
           "clienthello": {
             "ja3": "d67b094811e5145139d7cea5f014309f",
-            "ja4": "t13d5212h2_b262b3658495_d2e3c31a3398",
+            "ja4": "t13d5212h2_b262b3658495_8e6e362c5eac",
             "sni": "www.youtube.com",
             "ciphers": 52,
             "exts": 12,
@@ -508,7 +511,7 @@
             ]
           },
           "sentBytes": 1610,
-          "ms": 5
+          "ms": 4
         }
       },
       "verdicts": [
@@ -526,7 +529,7 @@
       "steps": {
         "tcp": {
           "ok": true,
-          "ms": 2,
+          "ms": 3,
           "kind": "ok"
         },
         "tls": {
@@ -535,7 +538,7 @@
           "code": "ECONNRESET",
           "clienthello": {
             "ja3": "d67b094811e5145139d7cea5f014309f",
-            "ja4": "t13d5212h2_b262b3658495_d2e3c31a3398",
+            "ja4": "t13d5212h2_b262b3658495_8e6e362c5eac",
             "sni": "telegram.org",
             "ciphers": 52,
             "exts": 12,
@@ -563,7 +566,7 @@
       "steps": {
         "tcp": {
           "ok": true,
-          "ms": 23,
+          "ms": 24,
           "kind": "ok"
         },
         "tls": {
@@ -572,7 +575,7 @@
           "code": "ECONNRESET",
           "clienthello": {
             "ja3": "d67b094811e5145139d7cea5f014309f",
-            "ja4": "t13d5212h2_b262b3658495_d2e3c31a3398",
+            "ja4": "t13d5212h2_b262b3658495_8e6e362c5eac",
             "sni": "www.microsoft.com",
             "ciphers": 52,
             "exts": 12,
@@ -582,7 +585,7 @@
             ]
           },
           "sentBytes": 1612,
-          "ms": 11
+          "ms": 4
         }
       },
       "verdicts": [
@@ -600,7 +603,7 @@
       "steps": {
         "tcp": {
           "ok": true,
-          "ms": 11,
+          "ms": 12,
           "kind": "ok"
         },
         "tls": {
@@ -609,7 +612,7 @@
           "code": "ECONNRESET",
           "clienthello": {
             "ja3": "d67b094811e5145139d7cea5f014309f",
-            "ja4": "t13d5212h2_b262b3658495_d2e3c31a3398",
+            "ja4": "t13d5212h2_b262b3658495_8e6e362c5eac",
             "sni": "cloudflare.com",
             "ciphers": 52,
             "exts": 12,
@@ -619,7 +622,7 @@
             ]
           },
           "sentBytes": 1609,
-          "ms": 15
+          "ms": 13
         }
       },
       "verdicts": [
@@ -636,59 +639,67 @@
       {
         "i": 0,
         "ok": true,
-        "ms": 10,
+        "ms": 8,
         "error": null
       },
       {
         "i": 1,
         "ok": true,
-        "ms": 12,
+        "ms": 7,
         "error": null
       },
       {
         "i": 2,
         "ok": true,
-        "ms": 13,
+        "ms": 9,
         "error": null
       },
       {
         "i": 3,
         "ok": true,
-        "ms": 15,
+        "ms": 10,
         "error": null
       },
       {
         "i": 4,
         "ok": true,
-        "ms": 24,
+        "ms": 11,
         "error": null
       }
     ],
     "singleAfter": {
       "ok": true,
-      "ms": 5,
+      "ms": 6,
       "error": null
     },
     "verdict": "ok",
     "note": "Все 5 параллельных и одиночное соединение проходят — порог параллелизма не сработал.",
-    "burstTotalMs": 25
+    "burstTotalMs": 11
   },
   "udp": {
     "probes": [
+      {
+        "name": "quic-version-negotiate:443",
+        "ok": false,
+        "response": 0,
+        "error": null,
+        "ms": 3004,
+        "addr": "140.82.116.4"
+      },
       {
         "name": "quic-initial:443",
         "ok": false,
         "response": 0,
         "error": null,
-        "ms": 3000,
-        "addr": "20.29.134.23"
+        "ms": 3001,
+        "addr": "140.82.116.4"
       },
       {
         "name": "udp-junk:443",
         "ok": false,
         "response": 0,
         "error": null,
-        "ms": 3002,
+        "ms": 3003,
         "addr": "20.29.134.23"
       },
       {
@@ -697,7 +708,7 @@
         "response": 0,
         "error": null,
         "ms": 2002,
-        "addr": "140.82.116.3"
+        "addr": "140.82.116.4"
       }
     ],
     "verdicts": [
@@ -708,165 +719,17 @@
       }
     ]
   },
-  "lab": {
-    "rows": [
-      {
-        "mode": "raw-magic",
-        "scenario": "web",
-        "signals": {
-          "1_сигнатура": 1,
-          "2_случайность/структура": 0.68,
-          "3_форма_потока": 0.15,
-          "4_тайминги": 0.5,
-          "5_эндпоинт(конфиг)": 0.5
-        },
-        "metrics": {
-          "entropy_flow_16kb": 7.988,
-          "entropy_client": 7.711,
-          "record_count": 0,
-          "record_size_entropy": 0,
-          "records_ge_1500_frac": 0,
-          "in_out_ratio": 41.53,
-          "timing_cv": 0.72
-        },
-        "detectability_score": 58,
-        "verdict": "ПОДОЗРИТЕЛЬНО: рискованно для массового применения"
-      },
-      {
-        "mode": "raw-magic",
-        "scenario": "tunnel",
-        "signals": {
-          "1_сигнатура": 1,
-          "2_случайность/структура": 0.68,
-          "3_форма_потока": 1,
-          "4_тайминги": 0.9,
-          "5_эндпоинт(конфиг)": 0.5
-        },
-        "metrics": {
-          "entropy_flow_16kb": 7.989,
-          "entropy_client": 7.989,
-          "record_count": 0,
-          "record_size_entropy": 0,
-          "records_ge_1500_frac": 0,
-          "in_out_ratio": 1,
-          "timing_cv": 0
-        },
-        "detectability_score": 85,
-        "verdict": "ОПАСНО: высокий риск детектирования/заморозки"
-      },
-      {
-        "mode": "tls-random",
-        "scenario": "web",
-        "signals": {
-          "1_сигнатура": 0,
-          "2_случайность/структура": 1,
-          "3_форма_потока": 0.15,
-          "4_тайминги": 0.5,
-          "5_эндпоинт(конфиг)": 0.5
-        },
-        "metrics": {
-          "entropy_flow_16kb": 7.99,
-          "entropy_client": 7.746,
-          "record_count": 15,
-          "record_size_entropy": 1.04,
-          "records_ge_1500_frac": 0.8,
-          "in_out_ratio": 61.87,
-          "timing_cv": 0.72
-        },
-        "detectability_score": 41,
-        "verdict": "ПОДОЗРИТЕЛЬНО: рискованно для массового применения"
-      },
-      {
-        "mode": "tls-random",
-        "scenario": "tunnel",
-        "signals": {
-          "1_сигнатура": 0,
-          "2_случайность/структура": 1,
-          "3_форма_потока": 1,
-          "4_тайминги": 0.9,
-          "5_эндпоинт(конфиг)": 0.5
-        },
-        "metrics": {
-          "entropy_flow_16kb": 7.988,
-          "entropy_client": 7.988,
-          "record_count": 20,
-          "record_size_entropy": 0,
-          "records_ge_1500_frac": 1,
-          "in_out_ratio": 1,
-          "timing_cv": 0
-        },
-        "detectability_score": 69,
-        "verdict": "ОПАСНО: высокий риск детектирования/заморозки"
-      },
-      {
-        "mode": "browser-shaped",
-        "scenario": "web",
-        "signals": {
-          "1_сигнатура": 0,
-          "2_случайность/структура": 0.68,
-          "3_форма_потока": 0.15,
-          "4_тайминги": 0.15,
-          "5_эндпоинт(конфиг)": 0.5
-        },
-        "metrics": {
-          "entropy_flow_16kb": 7.988,
-          "entropy_client": 7.707,
-          "record_count": 39,
-          "record_size_entropy": 4.56,
-          "records_ge_1500_frac": 0.33,
-          "in_out_ratio": 66.92,
-          "timing_cv": 1.29
-        },
-        "detectability_score": 28,
-        "verdict": "ПРОХОДИТ модель (низкий риск по измеренным сигналам)"
-      },
-      {
-        "mode": "browser-shaped",
-        "scenario": "tunnel",
-        "signals": {
-          "1_сигнатура": 0,
-          "2_случайность/структура": 0.68,
-          "3_форма_потока": 1,
-          "4_тайминги": 0.9,
-          "5_эндпоинт(конфиг)": 0.5
-        },
-        "metrics": {
-          "entropy_flow_16kb": 7.988,
-          "entropy_client": 7.988,
-          "record_count": 20,
-          "record_size_entropy": 4.32,
-          "records_ge_1500_frac": 0.7,
-          "in_out_ratio": 0.84,
-          "timing_cv": 0.28
-        },
-        "detectability_score": 60,
-        "verdict": "ПОДОЗРИТЕЛЬНО: рискованно для массового применения"
-      }
-    ],
-    "legend": {
-      "1_сигнатура": "Первые 16–32 байта не похожи на TLS/HTTP → мгновенная сигнатура (слой 1).",
-      "2_случайность/структура": "«Случайность» первых 16КБ + монотонные размеры записей (атака фев.2026).",
-      "3_форма_потока": "Отношение входящего/исходящего трафика: туннель симметричен, веб — нет.",
-      "4_тайминги": "CV межзаписных интервалов: ровный поток = туннель, всплески = браузер.",
-      "5_эндпоинт(конфиг)": "SNI≠инфраструктура, зарубежный хостинг, залпы хендшейков (Сигнал 3)."
-    },
-    "recommendation": "Наивный формат (raw-magic) детектируется сразу (риск 72%), «случайный» туннель в TLS-record — на поведенческом слое (риск 55%), веб-обёртка снижает риск (риск 44%), но НЕ спасает при туннельном сценарии: форма потока и тайминги выдают туннель даже внутри идеального TLS-фрейминга. Вывод: «Пиросто» должен быть не просто замаскированным протоколом, а транспортом, который статистически неотличим от браузерного сценария (мультиплексирование, паддинг, пейсинг, сервер с реальной веб-нагрузкой).",
-    "scores": {
-      "raw-magic": 72,
-      "tls-random": 55,
-      "browser-shaped": 44
-    }
-  },
+  "lab": null,
   "verdicts": [
     {
       "level": "ok",
       "code": "tls-ok",
-      "text": "TLS TLSv1.3, TLS_AES_128_GCM_SHA256, ALPN=h2; наш JA3=d67b094811e5145139d7cea5f014309f, JA4=t13d5212h2_b262b3658495_d2e3c31a3398",
+      "text": "TLS TLSv1.3, TLS_AES_128_GCM_SHA256, ALPN=h2; наш JA3=d67b094811e5145139d7cea5f014309f, JA4=t13d5212h2_b262b3658495_8e6e362c5eac",
       "host": "github.com"
     },
     {
       "level": "warn",
-      "code": "sni-sni-mismatch",
+      "code": "sni-mismatch",
       "text": "Родной SNI (github.com) проходит, cover-SNI (www.microsoft.com) — нет. Это может быть как SNI-фильтрацией на пути, так и виртуальным хостингом сервера (чужой SNI отвергает сам сервер). Тест информативен, когда cover-SNI принадлежит той же CDN/инфраструктуре.",
       "host": "github.com"
     },
@@ -879,12 +742,12 @@
     {
       "level": "ok",
       "code": "tls-ok",
-      "text": "TLS TLSv1.3, TLS_AES_128_GCM_SHA256, ALPN=h2; наш JA3=d67b094811e5145139d7cea5f014309f, JA4=t13d5212h2_b262b3658495_d2e3c31a3398",
+      "text": "TLS TLSv1.3, TLS_AES_128_GCM_SHA256, ALPN=h2; наш JA3=d67b094811e5145139d7cea5f014309f, JA4=t13d5212h2_b262b3658495_8e6e362c5eac",
       "host": "api.github.com"
     },
     {
       "level": "warn",
-      "code": "sni-sni-mismatch",
+      "code": "sni-mismatch",
       "text": "Родной SNI (api.github.com) проходит, cover-SNI (www.microsoft.com) — нет. Это может быть как SNI-фильтрацией на пути, так и виртуальным хостингом сервера (чужой SNI отвергает сам сервер). Тест информативен, когда cover-SNI принадлежит той же CDN/инфраструктуре.",
       "host": "api.github.com"
     },
@@ -935,12 +798,7 @@
       "code": "udp-drop",
       "text": "UDP-пробы молча отбрасываются — либо фильтрация UDP (Hysteria/QUIC не заработают), либо блокировка UDP в локальной среде/файрволе. Проверьте из целевой сети.",
       "host": "github.com"
-    },
-    {
-      "level": "info",
-      "code": "lab",
-      "text": "Лаборатория «Пиросто»: риск raw-magic=72%, tls-random=55%, browser-shaped=44%."
     }
   ],
-  "duration_ms": 37728
+  "duration_ms": 38967
 }

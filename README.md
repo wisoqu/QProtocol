@@ -19,6 +19,7 @@
 ./bin/qprotocol serve --port 8787           # занять порт: дашборд + JSON API
 ./bin/qprotocol diag --out report.json      # разовая диагностика в JSON
 ./bin/qprotocol lab                         # лаборатория детектируемости «Пиросто»
+./bin/qprotocol selftest                    # регрессионные проверки движка (56 тестов, для CI)
 ```
 
 Веб-интерфейс: `http://localhost:8787/` · API: `/api/report`, `/api/run`, `/api/lab`, `/api/health`.
@@ -45,3 +46,7 @@
 
 Требуется Node.js ≥ 20 (для SEA) и npm. `build.sh` склеивает `app/src/*.js`,
 проверяет синтаксис, упаковывает в `bin/qprotocol` (один файл, без зависимостей).
+
+`qprotocol selftest` проверяет движок по золотым векторам JA3/JA4 из официальной
+спецификации FoxIO (`FoxIO-LLC/ja4`), парсер DNS, билдер ClientHello и инварианты
+лаборатории — используйте его как CI-гейт перед релизом.

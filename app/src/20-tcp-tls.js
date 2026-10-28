@@ -144,23 +144,19 @@ function buildChromeClientHello(sni, opts = {}) {
     const l = Buffer.alloc(2); l.writeUInt16BE(handshake.length, 0); return l;
   })(), handshake]);
 
-  // Смещение значения SNI внутри record (для split-mid-sni)
-  const extsStart = 2 + 32 + 1 + 32 + csBuf.length + 2 + 2; // внутри body
-  const sniValueOffset = 5 + 5 + 5; // record hdr + hs hdr + body hdr... точнее:
-  // record(5) + handshake hdr(4) + version(2)+random(32)+sessid(1+32)+ciphers(2+len)+comp(2)+extlen(2)
-  const bodyStart = 5 + 4;
-  const sniExtStartInBody = extsStart + 4 + 4; // после GREASE-ext(4+1=5?) — пересчитаем безопасно:
-  // Найдём точное смещение значения SNI поиском
+  // Смещение значения SNI внутри record (для split-mid-sni) — ищем маркер точным поиском:
+  // [ext id 0000][ext len][server_name_list len][type 00][name len][host]
   const marker = Buffer.concat([Buffer.from([0x00, 0x00]), (() => {
+    const l = Buffer.alloc(2); l.writeUInt16BE(5 + host.length, 0); return l;
+  })(), (() => {
     const l = Buffer.alloc(2); l.writeUInt16BE(3 + host.length, 0); return l;
   })(), Buffer.from([0x00]), (() => {
     const l = Buffer.alloc(2); l.writeUInt16BE(host.length, 0); return l;
   })(), host]);
   const idx = record.indexOf(marker);
-  const sniValueOffset2 = idx >= 0 ? idx + marker.length - host.length : -1;
-  void sniValueOffset; void sniExtStartInBody; void bodyStart;
+  const sniValueOffset = idx >= 0 ? idx + marker.length - host.length : -1;
 
-  return { record, hello: handshake, sniValueOffset: sniValueOffset2, ciphers: cipherSuites, extIds: null, groups: [grease2, 0x001d, 0x0017, 0x0018], alpn };
+  return { record, hello: handshake, sniValueOffset, ciphers: cipherSuites, groups: [grease2, 0x001d, 0x0017, 0x0018], alpn };
 }
 
 /** Распарсить ClientHello (record) в поля для JA3/JA4. */
@@ -225,7 +221,7 @@ function isGrease(v) {
   return (v & 0x0f0f) === 0x0a0a && (v >> 8) === (v & 0xff);
 }
 
-/** JA3: MD5(Version,Ciphers,Extensions,EllipticCurves,PointFormats) */
+/** JA3: MD5(Version,Ciphers,Extensions,EllipticCurves,PointFormats) — значения в десятичном виде. */
 function computeJa3(parsed) {
   const filt = (arr) => arr.filter((v) => !isGrease(v));
   const s = [
@@ -238,19 +234,71 @@ function computeJa3(parsed) {
   return { md5: md5hex(Buffer.from(s, 'ascii')), raw: s };
 }
 
-/** JA4: t13d<cc><ee><alpn>_<sha256 ciphers>_<sha256 exts+sigalgs> */
+// Карта версий TLS для JA4 (спецификация FoxIO JA4).
+const JA4_VERSION_MAP = {
+  0x0304: '13', 0x0303: '12', 0x0302: '11', 0x0301: '10', 0x0300: 's3',
+  0x0002: 's2', 0xfeff: 'd1', 0xfefd: 'd2', 0xfefc: 'd3',
+};
+
+/** JA4-ALPN: первый и последний ASCII-алфавитно-цифровой символ первого значения;
+ *  если первый/последний байт не алфанумерический — первая и последняя цифры hex-представления;
+ *  пусто/нет → "00"; одиночный символ удваивается. */
+function ja4AlpnValue(alpnList) {
+  const v = Array.isArray(alpnList) ? (alpnList.length ? alpnList[0] : '') : (alpnList || '');
+  if (!v) return '00';
+  const isAlnum = (c) => /^[0-9A-Za-z]$/.test(c);
+  const first = v[0];
+  const last = v[v.length - 1];
+  if (isAlnum(first) && isAlnum(last)) return first + last;
+  const hex = Buffer.from(v, 'latin1').toString('hex');
+  return (hex[0] || '0') + (hex[hex.length - 1] || '0');
+}
+
+/**
+ * JA4 (по спецификации FoxIO): t13d1516h2_<sha ciphers>_<sha exts+sigalgs>
+ * — версия: верхняя из supported_versions (без GREASE), иначе legacy version;
+ * — счётчик расширений: все кроме GREASE (SNI/ALPN/padding считаются);
+ * — hash ciphers: сортированный hex-список без GREASE, пусто → 000000000000;
+ * — hash extensions: сортированный hex-список без GREASE, SNI(0000) и ALPN(0010)
+ *   исключены (padding остаётся), затем "_" + sigalgs В ПОРЯДКЕ ПОЯВЛЕНИЯ (не сорт.);
+ *   без sigalgs подчёркивание не добавляется; пусто → 000000000000.
+ */
 function computeJa4(parsed) {
-  const ciphers = parsed.ciphers.filter((v) => !isGrease(v)).map((v) => v.toString(16).padStart(4, '0')).sort();
-  const exts = parsed.extIds.filter((v) => !isGrease(v) && v !== 0x0015).map((v) => v.toString(16).padStart(4, '0')).sort();
-  const sigs = parsed.sigAlgs.map((v) => v.toString(16).padStart(4, '0')).sort();
-  const ver = parsed.versions.includes(0x0304) ? '13' : '12';
+  const noGrease = (arr) => arr.filter((v) => !isGrease(v));
+  const hex4 = (v) => v.toString(16).padStart(4, '0');
+
+  // Версия
+  let ver = '00';
+  if (parsed.versions && parsed.versions.length) {
+    const vs = noGrease(parsed.versions);
+    if (vs.length) ver = JA4_VERSION_MAP[Math.max(...vs)] || '00';
+  } else {
+    ver = JA4_VERSION_MAP[parsed.version] || '00';
+  }
+
+  const ciphers = noGrease(parsed.ciphers).map(hex4).sort();
+  const extAll = noGrease(parsed.extIds);
+  const extCount = Math.min(extAll.length, 99);
+  const extHashList = extAll
+    .filter((e) => e !== 0x0000 && e !== 0x0010)
+    .map(hex4)
+    .sort();
+
   const sniChar = parsed.sni ? 'd' : 'i';
-  const alpnStr = parsed.alpn.length
-    ? (parsed.alpn[0][0] + parsed.alpn[0][parsed.alpn[0].length - 1])
-    : '00';
-  const a = `t${ver}${sniChar}${String(ciphers.length).padStart(2, '0')}${String(exts.length).padStart(2, '0')}${alpnStr}`;
-  const b = sha256hex(Buffer.from(ciphers.join(','), 'ascii')).slice(0, 12);
-  const c = sha256hex(Buffer.from(exts.join(',') + '_' + sigs.join(','), 'ascii')).slice(0, 12);
+  const alpnStr = ja4AlpnValue(parsed.alpn);
+
+  const a = `t${ver}${sniChar}${String(Math.min(ciphers.length, 99)).padStart(2, '0')}${String(extCount).padStart(2, '0')}${alpnStr}`;
+
+  const b = ciphers.length ? sha256hex(Buffer.from(ciphers.join(','), 'ascii')).slice(0, 12) : '000000000000';
+
+  let c = '000000000000';
+  if (extHashList.length) {
+    let s = extHashList.join(',');
+    if (parsed.sigAlgs && parsed.sigAlgs.length) {
+      s += '_' + parsed.sigAlgs.map(hex4).join(','); // в порядке появления
+    }
+    c = sha256hex(Buffer.from(s, 'ascii')).slice(0, 12);
+  }
   return `${a}_${b}_${c}`;
 }
 
@@ -348,7 +396,6 @@ async function fragProbe(host, port, sni, mode, timeoutMs) {
       socket.write(rec2);
     } else if (mode === 'tiny-records') {
       // ClientHello, разложенный на много мелких TLS records (по 8 байт handshake)
-      let off = 5; // после заголовка первого record
       const payload = rec.subarray(5);
       let first = true;
       for (let i = 0; i < payload.length; i += 8) {
@@ -359,7 +406,6 @@ async function fragProbe(host, port, sni, mode, timeoutMs) {
         socket.write(r);
         if (first) { first = false; await sleep(10); }
       }
-      void off;
     } else {
       socket.write(rec);
     }
@@ -387,16 +433,24 @@ async function fragProbe(host, port, sni, mode, timeoutMs) {
 function startCaptureRelay(targetHost, targetPort) {
   return new Promise((resolve, reject) => {
     const clientChunks = [];
-    let upstreamRef = null;
+    const sockets = new Set();
     const server = net.createServer((client) => {
       const upstream = net.connect({ host: targetHost, port: targetPort });
-      upstreamRef = upstream;
+      sockets.add(client);
+      sockets.add(upstream);
       client.on('data', (d) => clientChunks.push(Buffer.from(d)));
       client.pipe(upstream);
       upstream.pipe(client);
-      const kill = () => { try { client.destroy(); } catch (_) {} try { upstream.destroy(); } catch (_) {} };
+      const kill = () => {
+        sockets.delete(client);
+        sockets.delete(upstream);
+        try { client.destroy(); } catch (_) {}
+        try { upstream.destroy(); } catch (_) {}
+      };
       client.on('error', kill);
       upstream.on('error', kill);
+      client.on('close', () => sockets.delete(client));
+      upstream.on('close', () => sockets.delete(upstream));
     });
     server.once('error', reject);
     server.listen(0, '127.0.0.1', () => {
@@ -404,7 +458,10 @@ function startCaptureRelay(targetHost, targetPort) {
         port: server.address().port,
         clientBytes: () => Buffer.concat(clientChunks),
         close: () => {
-          try { if (upstreamRef) upstreamRef.destroy(); } catch (_) {}
+          for (const s of sockets) {
+            try { s.destroy(); } catch (_) {}
+          }
+          sockets.clear();
           try { server.close(); } catch (_) {}
         },
       });
@@ -517,12 +574,12 @@ async function sniFilterTest(ip, realHost, coverSni, timeoutMs) {
   let verdict = 'ok';
   let note = 'Оба хендшейка проходят — SNI-фильтрации на пути не видно.';
   if (a.ok && !b.ok) {
-    verdict = 'sni-mismatch';
+    verdict = 'mismatch';
     note = `Родной SNI (${realHost}) проходит, cover-SNI (${coverSni}) — нет. ` +
       'Это может быть как SNI-фильтрацией на пути, так и виртуальным хостингом сервера (чужой SNI отвергает сам сервер). ' +
       'Тест информативен, когда cover-SNI принадлежит той же CDN/инфраструктуре.';
   } else if (!a.ok && b.ok) {
-    verdict = 'sni-blocklist';
+    verdict = 'blocklist';
     note = `SNI ${realHost} блокируется, cover-SNI проходит — блок-лист по домену на пути.`;
   } else if (!a.ok && !b.ok) {
     verdict = 'both-fail';
