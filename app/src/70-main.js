@@ -11,6 +11,7 @@ ${APP_NAME} v${VERSION}
   qprotocol [serve] [--port N] [--host H] [--targets a,b,c]   занять порт и показать дашборд
   qprotocol diag [--targets a,b,c] [--out report.json]        разовая диагностика в JSON
   qprotocol lab                                               только лаборатория «Пиросто»
+  qprotocol selftest                                          регрессионные проверки движка (для CI)
   qprotocol help                                              эта справка
 
 Опции:
@@ -55,6 +56,21 @@ async function main() {
   if (args.cmd === 'help') {
     printHelp();
     return;
+  }
+
+  if (!['serve', 'diag', 'lab', 'selftest'].includes(args.cmd)) {
+    console.error(`[qpd] неизвестная команда: ${args.cmd}\n`);
+    printHelp();
+    process.exit(2);
+  }
+
+  if (args.cmd === 'selftest') {
+    const r = runSelftest();
+    for (const t of r.results) {
+      console.log(`${t.ok ? 'PASS' : 'FAIL'}  ${t.name}${t.ok ? '' : '  ' + t.detail}`);
+    }
+    console.log(`\n[qpd] selftest: ${r.total - r.failed}/${r.total} passed`);
+    process.exit(r.failed === 0 ? 0 : 1);
   }
 
   if (args.cmd === 'lab') {

@@ -32,14 +32,16 @@ async function diagnoseTarget(t, timeoutMs, controlOk) {
   out.steps.tcp.kind = classifyTargetError(tcp);
 
   if (!tcp.ok) {
-    const level = controlOk ? 'block' : 'info';
-    out.verdicts.push({
-      level,
-      code: 'tcp-fail',
-      text: controlOk
-        ? `TCP:443 недоступен (${out.steps.tcp.kind}) при живом контрольном хосте — признак IP-блокировки или обрыва.`
-        : `TCP:443 недоступен (${out.steps.tcp.kind}); контрольный хост тоже недоступен — сеть/среда ограничена, это не похоже на точечную цензуру.`,
-    });
+    const level = (controlOk && t.role !== 'control') ? 'block' : 'info';
+    let text;
+    if (t.role === 'control') {
+      text = `Контрольный хост: TCP:443 недоступен (${out.steps.tcp.kind}) — исходящая сеть ограничена; вердикты «блокировка» для остальных целей ненадёжны.`;
+    } else if (controlOk) {
+      text = `TCP:443 недоступен (${out.steps.tcp.kind}) при живом контрольном хосте — признак IP-блокировки или обрыва.`;
+    } else {
+      text = `TCP:443 недоступен (${out.steps.tcp.kind}); контрольный хост тоже недоступен — сеть/среда ограничена, это не похоже на точечную цензуру.`;
+    }
+    out.verdicts.push({ level, code: 'tcp-fail', text });
     return out;
   }
 
@@ -47,10 +49,13 @@ async function diagnoseTarget(t, timeoutMs, controlOk) {
   const tlsr = await realTlsHandshake(t.host, 443, t.host, timeoutMs);
   out.steps.tls = tlsr;
   if (!tlsr.ok) {
+    const mid = (controlOk && t.role !== 'control')
+      ? 'классический «freeze mid-handshake» либо глубокая фильтрация.'
+      : 'похоже на ограничение среды/прокси — проверьте из целевой сети.';
     out.verdicts.push({
-      level: 'block',
+      level: (controlOk && t.role !== 'control') ? 'block' : 'info',
       code: 'tls-fail',
-      text: `TCP установлен, но TLS-хендшейк не завершается (${tlsr.error}) — классический «freeze mid-handshake» либо глубокая фильтрация.`,
+      text: `TCP установлен, но TLS-хендшейк не завершается (${tlsr.error}) — ${mid}`,
     });
     return out;
   }
@@ -147,7 +152,7 @@ async function runFullDiagnostics(opts) {
 
   for (const t of ordered) {
     const r = await diagnoseTarget(t, timeoutMs, controlOk);
-    if (t.role === 'control' && r.steps && r.steps.tcp && r.steps.tcp.ok) controlOk = true;
+    if (t.role === 'control' && r.steps && r.steps.tls && r.steps.tls.ok) controlOk = true;
     report.targets.push(r);
     report.verdicts.push(...r.verdicts.map((v) => ({ ...v, host: t.host })));
   }

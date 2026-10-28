@@ -110,7 +110,7 @@ function render(rep){
   if(rep.dns){
     h+='<section><h2>DNS</h2><table><tr><th>Резолвер</th><th>Хост</th><th>Статус</th><th>Ответы</th><th>мс</th></tr>';
     (rep.dns.raw||[]).forEach(function(d){
-      h+='<tr><td>'+esc(d.name||d.resolver)+'</td><td>'+esc(d.name&&d.resolver?d.resolver:d.name)+'</td>'+
+      h+='<tr><td>'+esc(d.resolver_name||d.resolver_ip)+'</td><td>'+esc(d.query_name||'—')+'</td>'+
         '<td>'+chip(d.ok?'ok':(d.icmp?'warn':'bad'))+(d.poisoned?' отравление':'')+'</td>'+
         '<td class="mono">'+esc((d.answers||[]).map(function(a){return a.data;}).join(', ')||d.error||'—')+'</td>'+
         '<td>'+esc(d.ms)+'</td></tr>';

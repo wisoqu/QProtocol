@@ -31,14 +31,19 @@ function parseDnsResponse(buf) {
   const qd = buf.readUInt16BE(4);
   const an = buf.readUInt16BE(6);
   let o = 12;
-  // пропускаем вопросы
+  // пропускаем вопросы (имя + u16 type + u16 class)
   for (let i = 0; i < qd && o < buf.length; i++) {
-    while (o < buf.length && buf[o] !== 0) {
-      if ((buf[o] & 0xc0) === 0xc0) { o += 2; break; }
-      o += buf[o] + 1;
+    // имя: либо последовательность меток, либо 2-байтный указатель (сжатие)
+    if (o < buf.length && (buf[o] & 0xc0) === 0xc0) {
+      o += 2;
+    } else {
+      while (o < buf.length && buf[o] !== 0) {
+        if ((buf[o] & 0xc0) === 0xc0) { o += 2; break; }
+        o += buf[o] + 1;
+      }
+      if (o < buf.length && buf[o] === 0) o++; // завершающий ноль меток
     }
-    if (o < buf.length && buf[o] === 0) o++;
-    o += 4;
+    o += 4; // type + class
   }
   for (let i = 0; i < an && o + 12 <= buf.length; i++) {
     // имя (может быть указателем)
@@ -79,7 +84,7 @@ function rawDnsQuery(resolverIp, name, qtype, timeoutMs) {
       if (done) return;
       done = true;
       try { sock.close(); } catch (_) {}
-      resolve({ ...result, ms: now() - t0, resolver: resolverIp, name, qtype });
+      resolve({ ...result, ms: now() - t0, resolver_ip: resolverIp, query_name: name, qtype });
     };
     sock.on('error', (e) => finish({ ok: false, error: String(e.message || e) }));
     sock.on('message', (msg) => {
@@ -114,7 +119,7 @@ async function runDnsDiagnostics(targetHosts) {
   for (const resolver of RESOLVERS) {
     if (!resolver.host) continue;
     const r = await rawDnsQuery(resolver.host, probeHost, 1, 3000);
-    results.raw.push({ ...r, name: resolver.name });
+    results.raw.push({ ...r, resolver_name: resolver.name });
   }
 
   // DoH (может быть недоступен из песочницы — это тоже диагностический сигнал)

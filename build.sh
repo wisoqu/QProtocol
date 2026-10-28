@@ -13,6 +13,7 @@ cat app/src/00-head.js \
     app/src/40-lab.js \
     app/src/50-report.js \
     app/src/60-server.js \
+    app/src/80-selftest.js \
     app/src/70-main.js > app/main.js
 
 echo "[build] синтаксическая проверка"
@@ -35,7 +36,12 @@ cp "$(command -v node)" bin/qprotocol
 rm -f bin/qprotocol.blob 2>/dev/null || true
 
 echo "[build] внедрение блоба (postject)"
-npx --yes postject bin/qprotocol NODE_SEA_BLOB app/sea-prep.blob \
+if [ -x node_modules/.bin/postject ]; then
+  PJ=node_modules/.bin/postject
+else
+  PJ="npx --yes postject"
+fi
+$PJ bin/qprotocol NODE_SEA_BLOB app/sea-prep.blob \
   --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2 >/dev/null
 
 chmod +x bin/qprotocol
